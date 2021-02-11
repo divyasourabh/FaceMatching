@@ -58,7 +58,6 @@ class FaceMatchinghelper(context: Context) {
             Bitmap.Config.ARGB_8888
         )
         val cvFace = Canvas(faceBmp)
-        // maps original coordinates to portrait coordinates
         val faceBB = RectF(boundingBox)
         val sx: Float =
             (tfOdApiInputSize.toFloat()) / faceBB.width()
@@ -104,7 +103,6 @@ class FaceMatchinghelper(context: Context) {
         val t1 = System.currentTimeMillis()
         val outputs = Array(1) { FloatArray(192) }
         tensorflowInterpreter.run(inputs, outputs)
-        Log.i("Performance", "FaceNet Inference Speed in ms : ${System.currentTimeMillis() - t1}")
         return outputs
     }
 
