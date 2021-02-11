@@ -15,8 +15,8 @@ import kotlin.math.sqrt
 
 class FaceMatchinghelper(context: Context) {
 
-    lateinit var firstImageBorders: FloatArray
-    lateinit var secondImageBorders: FloatArray
+    lateinit var userImageBorders: FloatArray
+    lateinit var idCardImageBorders: FloatArray
     private val intValues: IntArray = IntArray(MODEL_FACE_SIZE * MODEL_FACE_SIZE)
     private lateinit var firebaseVisionFaceDetectorOptions: FirebaseVisionFaceDetectorOptions
     private val tensorflowInterpreter: Interpreter
@@ -32,11 +32,11 @@ class FaceMatchinghelper(context: Context) {
     }
     
     fun createFirstEmbedding() {
-        firstImageBorders = FloatArray(128)
+        userImageBorders = FloatArray(128)
     }
 
     fun createSecondEmbedding() {
-        secondImageBorders = FloatArray(128)
+        idCardImageBorders = FloatArray(128)
     }
 
 

@@ -5,7 +5,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 
-class FaceMatchApplication : Application() {
+class FaceMatchingApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         val provideRequestOptions = provideRequestOptions()

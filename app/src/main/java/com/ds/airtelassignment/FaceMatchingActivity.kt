@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -19,18 +18,18 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
+class FaceMatchingActivity : AppCompatActivity() {
 
-    var isFirstImageAdded = false
-    var isSecondImageAdded = false
-    var isFirstImage = false
-    var isFirstImageFaceFound=false
-    var isSecondImageFaceFound=false
-    var firstImageBitmap: Bitmap? = null
-    var secondImageBitmap: Bitmap? = null
+    var isUserImageAdded = false
+    var isIdCardImageAdded = false
+    var isUserImage = false
+    var isUserImageFaceFound=false
+    var isIdCardImageFaceFound=false
+    var userImageBitmap: Bitmap? = null
+    var idCardImageBitmap: Bitmap? = null
 
     private val faceMatchinghelper: FaceMatchinghelper by lazy {
-        FaceMatchinghelper(this@MainActivity)
+        FaceMatchinghelper(this@FaceMatchingActivity)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,41 +37,41 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         tv_firstImage.setOnClickListener {
-            isFirstImage = true
+            isUserImage = true
             startCropScreen()   // open camera
         }
         tv_secondImage.setOnClickListener {
-            isFirstImage = false
+            isUserImage = false
             startCropScreen() // open camera
         }
 
         btn_calculate.setOnClickListener {
-            if(!isFirstImageAdded){
-                Toast.makeText(this@MainActivity,"Please add first image.", Toast.LENGTH_SHORT).show()
+            if(!isUserImageAdded){
+                Toast.makeText(this@FaceMatchingActivity,"Please add User image.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if(!isSecondImageAdded){
-                Toast.makeText(this@MainActivity,"Please add second image.", Toast.LENGTH_SHORT).show()
+            if(!isIdCardImageAdded){
+                Toast.makeText(this@FaceMatchingActivity,"Please add Id Card image.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if(!isFirstImageFaceFound){
-                Toast.makeText(this@MainActivity,"Face Not found in First image", Toast.LENGTH_SHORT).show()
+            if(!isUserImageFaceFound){
+                Toast.makeText(this@FaceMatchingActivity,"Face Not found in User image", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if(!isSecondImageFaceFound){
-                Toast.makeText(this@MainActivity,"Face Not found in Second image", Toast.LENGTH_SHORT).show()
+            if(!isIdCardImageFaceFound){
+                Toast.makeText(this@FaceMatchingActivity,"Face Not found in Id Card image", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             var highestMatchingPercentage = -1f
             var result: String
-            val p = faceMatchinghelper.findNearest(faceMatchinghelper.firstImageBorders,faceMatchinghelper.secondImageBorders)
+            val p = faceMatchinghelper.findNearest(faceMatchinghelper.userImageBorders,faceMatchinghelper.idCardImageBorders)
 
             result =  if ( p > highestMatchingPercentage && p < 1f) {
                 highestMatchingPercentage = p
-                "First And Second Images Matching"
+                "User And Id Card Images Matching"
             }else{
-                "First And Second Images didn't Matching"
+                "User And Id Card Images didn't Matching"
             }
 
             val format = String.format("%.2f", highestMatchingPercentage)
@@ -100,23 +99,23 @@ class MainActivity : AppCompatActivity() {
         showProgress(false)
         it?.let { faces ->
             if (faces.isEmpty()) {
-                Toast.makeText(this@MainActivity,"No face Found.Please try again", Toast.LENGTH_SHORT).show()
-                if (isFirstImage)
-                    isFirstImageFaceFound = false
+                Toast.makeText(this@FaceMatchingActivity,"No face Found.Please try again", Toast.LENGTH_SHORT).show()
+                if (isUserImage)
+                    isUserImageFaceFound = false
                 else
-                    isSecondImageFaceFound = false
+                    isIdCardImageFaceFound = false
             }else{
-                Toast.makeText(this@MainActivity,"Found ${faces.size} faces ", Toast.LENGTH_SHORT).show()
-                if (isFirstImage) {
+                Toast.makeText(this@FaceMatchingActivity,"Found ${faces.size} faces ", Toast.LENGTH_SHORT).show()
+                if (isUserImage) {
                     faceMatchinghelper.createFirstEmbedding()
-                    faceMatchinghelper.firstImageBorders =
-                        faceMatchinghelper.getFaceEmbedding(firstImageBitmap!!,faces[0].boundingBox)
-                    isFirstImageFaceFound=true
+                    faceMatchinghelper.userImageBorders =
+                        faceMatchinghelper.getFaceEmbedding(userImageBitmap!!,faces[0].boundingBox)
+                    isUserImageFaceFound=true
                 }else{
                     faceMatchinghelper.createSecondEmbedding()
-                    faceMatchinghelper.secondImageBorders =
-                        faceMatchinghelper.getFaceEmbedding(secondImageBitmap!!,faces[0].boundingBox)
-                    isSecondImageFaceFound=true
+                    faceMatchinghelper.idCardImageBorders =
+                        faceMatchinghelper.getFaceEmbedding(idCardImageBitmap!!,faces[0].boundingBox)
+                    isIdCardImageFaceFound=true
 
                 }
             }
@@ -145,7 +144,7 @@ class MainActivity : AppCompatActivity() {
 
     var errorWhileDetectingFace :(Exception)->Unit={
         showProgress(false)
-        Toast.makeText(this@MainActivity,"Error while detecting the face", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@FaceMatchingActivity,"Error while detecting the face", Toast.LENGTH_SHORT).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -155,16 +154,16 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val resultUri = result.uri
                 val selectedBitmap= MediaStore.Images.Media.getBitmap(this.contentResolver, resultUri)
-                if (isFirstImage) { // result for the first image
+                if (isUserImage) { // result for the first image
                     // show image to ui
-                    FaceMatchApplication.getGlide().load(resultUri).into(iv_FirstImage)
-                    isFirstImageAdded = true
-                    firstImageBitmap =selectedBitmap
+                    FaceMatchingApplication.getGlide().load(resultUri).into(iv_FirstImage)
+                    isUserImageAdded = true
+                    userImageBitmap =selectedBitmap
 
                 } else {
-                    FaceMatchApplication.getGlide().load(resultUri).into(ivSecondImage)
-                    isSecondImageAdded = true
-                    secondImageBitmap = selectedBitmap
+                    FaceMatchingApplication.getGlide().load(resultUri).into(ivSecondImage)
+                    isIdCardImageAdded = true
+                    idCardImageBitmap = selectedBitmap
                 }
 
                 showProgress(true)
@@ -175,7 +174,7 @@ class MainActivity : AppCompatActivity() {
                     faceMatchinghelper.detectFace(image,onfaceDetected,errorWhileDetectingFace)
                 } catch (e: IOException) {
                     showProgress(false)
-                    Toast.makeText(this@MainActivity,"Exception while getting the Image from file path", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@FaceMatchingActivity,"Exception while getting the Image from file path", Toast.LENGTH_SHORT).show()
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
