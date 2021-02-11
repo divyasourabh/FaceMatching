@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "399137647059",
+    "project_id": "facematching-23c21",
+    "storage_bucket": "facematching-23c21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399137647059:android:e14d80cc54e010991b6726",
+        "android_client_info": {
+          "package_name": "com.ds.airtelassignment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399137647059-aujdnm0ng90419mkm1kr5bjo5oq6h65m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxFUxqBI1vo9WHrYeBDDewt7I0cSClmrw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399137647059-aujdnm0ng90419mkm1kr5bjo5oq6h65m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
